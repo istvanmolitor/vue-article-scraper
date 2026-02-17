@@ -1,7 +1,38 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
-import { getBackandUrl } from '@admin/lib/utils'
+import { getBackandUrl, useDevError } from '@admin/lib/utils'
+import Button from '@admin/components/ui/Button.vue'
+import Input from '@admin/components/ui/Input.vue'
+import Label from '@admin/components/ui/Label.vue'
+import Card from '@admin/components/ui/Card.vue'
+import CardHeader from '@admin/components/ui/CardHeader.vue'
+import CardTitle from '@admin/components/ui/CardTitle.vue'
+import CardContent from '@admin/components/ui/CardContent.vue'
+
+const { showDevError } = useDevError()
+
+const api = axios.create({
+  baseURL: getBackandUrl(),
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+})
+
+// Add token to requests
+api.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem('auth_token')
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      return config
+    },
+    (error) => {
+      return Promise.reject(error)
+    }
+)
 
 interface ArticleImage {
   src: string
@@ -49,7 +80,7 @@ const scrapeArticle = async () => {
   article.value = null
 
   try {
-    const response = await axios.post(`${getBackandUrl()}/api/article-scraper/scrape`, {
+    const response = await api.post('/api/article-scraper/scrape', {
       url: url.value
     })
 
@@ -60,6 +91,7 @@ const scrapeArticle = async () => {
     }
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Hiba történt a cikk letöltése során'
+    showDevError(err)
   } finally {
     loading.value = false
   }
@@ -90,6 +122,7 @@ const saveAsPage = async () => {
     }
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Hiba történt a cikk mentése során'
+    showDevError(err)
   } finally {
     saving.value = false
   }
@@ -104,67 +137,66 @@ const reset = () => {
 </script>
 
 <template>
-  <div class="article-scraper p-6 max-w-4xl mx-auto">
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-2xl font-bold mb-6 text-gray-800">Cikk szkraper</h2>
-
-      <div class="space-y-4">
+  <div class="space-y-4">
         <!-- URL Input -->
-        <div>
-          <label for="article-url" class="block text-sm font-medium text-gray-700 mb-2">
+        <div class="space-y-2">
+          <Label for="article-url">
             Cikk URL
-          </label>
+          </Label>
           <div class="flex gap-2">
-            <input
+            <Input
               id="article-url"
               v-model="url"
               type="url"
               placeholder="https://example.com/cikk"
-              class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              class="flex-1"
               :disabled="loading || saving"
               @keyup.enter="scrapeArticle"
             />
-            <button
+            <Button
               @click="scrapeArticle"
               :disabled="loading || saving || !url.trim()"
-              class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {{ loading ? 'Letöltés...' : 'Letöltés' }}
-            </button>
-            <button
+            </Button>
+            <Button
               v-if="article"
               @click="saveAsPage"
               :disabled="saving || loading"
-              class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+              variant="secondary"
             >
               {{ saving ? 'Mentés...' : 'Mentés Page-ként' }}
-            </button>
-            <button
+            </Button>
+            <Button
               v-if="article"
               @click="reset"
               :disabled="saving || loading"
-              class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              variant="outline"
             >
               Törlés
-            </button>
+            </Button>
           </div>
         </div>
 
         <!-- Success Message -->
-        <div
+        <Card
           v-if="saveSuccess"
-          class="p-4 bg-green-50 border border-green-200 rounded-md"
+          class="border-green-200 bg-green-50"
         >
-          <p class="text-green-700">{{ saveSuccess }}</p>
-        </div>
+          <CardContent class="pt-6">
+            <p class="text-green-700">{{ saveSuccess }}</p>
+          </CardContent>
+        </Card>
 
         <!-- Error Message -->
-        <div
+        <Card
           v-if="error"
-          class="p-4 bg-red-50 border border-red-200 rounded-md"
+          class="border-red-200 bg-red-50"
         >
-          <p class="text-red-700">{{ error }}</p>
-        </div>
+          <CardContent class="pt-6">
+            <p class="text-red-700">{{ error }}</p>
+          </CardContent>
+        </Card>
 
         <!-- Loading Indicator -->
         <div
@@ -179,18 +211,18 @@ const reset = () => {
           v-if="article && !loading"
           class="mt-6"
         >
-          <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+          <Card>
             <!-- Article Header -->
-            <div class="p-6 border-b border-gray-200">
+            <CardHeader class="border-b">
               <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
                 <span class="font-medium">{{ article.portal }}</span>
                 <span>•</span>
                 <span v-if="article.createdAt">{{ new Date(article.createdAt).toLocaleDateString('hu-HU') }}</span>
               </div>
 
-              <h1 class="text-3xl font-bold text-gray-900 mb-4">
+              <CardTitle class="text-3xl mb-4">
                 {{ article.title }}
-              </h1>
+              </CardTitle>
 
               <!-- Authors -->
               <div v-if="article.authors && article.authors.length > 0" class="flex items-center gap-2 text-sm text-gray-600 mb-4">
@@ -210,7 +242,7 @@ const reset = () => {
                   {{ keyword }}
                 </span>
               </div>
-            </div>
+            </CardHeader>
 
             <!-- Main Image -->
             <div v-if="article.mainImage" class="relative">
@@ -225,14 +257,14 @@ const reset = () => {
             </div>
 
             <!-- Lead -->
-            <div v-if="article.lead" class="p-6 bg-gray-50 border-b border-gray-200">
+            <CardContent v-if="article.lead" class="bg-gray-50 border-b pt-6">
               <p class="text-lg font-medium text-gray-800 leading-relaxed">
                 {{ article.lead }}
               </p>
-            </div>
+            </CardContent>
 
             <!-- Article Content -->
-            <div class="p-6">
+            <CardContent class="pt-6">
               <div class="prose prose-lg max-w-none">
                 <template v-for="(element, index) in article.content" :key="index">
                   <!-- Paragraph -->
@@ -287,10 +319,10 @@ const reset = () => {
                   </div>
                 </template>
               </div>
-            </div>
+            </CardContent>
 
             <!-- Article Footer -->
-            <div class="p-6 bg-gray-50 border-t border-gray-200">
+            <CardContent class="bg-gray-50 border-t pt-6">
               <div class="flex items-center justify-between text-sm text-gray-600">
                 <a
                   :href="article.url"
@@ -304,18 +336,13 @@ const reset = () => {
                   </svg>
                 </a>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <style scoped>
-.article-scraper {
-  min-height: 400px;
-}
 
 .prose {
   color: #374151;
