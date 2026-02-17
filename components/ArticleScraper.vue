@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { getBackandUrl, useDevError } from '@admin/lib/utils'
-import Button from '@admin/components/ui/Button.vue'
+import Button from '@admin/components/ui/button/Button.vue'
 import Input from '@admin/components/ui/Input.vue'
 import Label from '@admin/components/ui/Label.vue'
 import Card from '@admin/components/ui/Card.vue'
