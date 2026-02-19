@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DashboardLayout from '@admin/components/layout/DashboardLayout.vue'
+import DashboardLayout from '@admin/components/layout/AdminLayout.vue'
 import { ArticleScraper } from '../index'
 </script>
 
