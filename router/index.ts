@@ -3,7 +3,7 @@ import ArticleScraperPage from '../pages/ArticleScraperPage.vue'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/article-scraper',
+    path: '/admin/article-scraper',
     name: 'ArticleScraper',
     component: ArticleScraperPage,
     meta: {

@@ -1,4 +1,4 @@
-import { MenuBuilder, type MenuItemConfig } from '../../vue-menu/types/menu'
+import { MenuBuilder, type MenuItemConfig } from '@menu/index'
 
 export class ArticleScraperMenuBuilder extends MenuBuilder {
   build(menu: MenuItemConfig, menuName: string): MenuItemConfig {
@@ -6,7 +6,7 @@ export class ArticleScraperMenuBuilder extends MenuBuilder {
       this.addMenuItem(menu, {
         id: 'article-scraper',
         title: 'Cikk szkraper',
-        path: '/article-scraper',
+        path: '/admin/article-scraper',
         order: 100
       })
     }
@@ -14,6 +14,9 @@ export class ArticleScraperMenuBuilder extends MenuBuilder {
     return menu
   }
 }
+
+// Export singleton instance
+export const articleScraperMenuBuilder = new ArticleScraperMenuBuilder()
 
 
 
