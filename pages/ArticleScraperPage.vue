@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import DashboardLayout from '@admin/components/layout/AdminLayout.vue'
-import { ArticleScraper } from '../index'
+import { AdminLayout } from '@admin'
+import ArticleScraper from '../components/ArticleScraper.vue'
 </script>
 
 <template>
-  <DashboardLayout>
+  <AdminLayout pageTitle="Cikk letöltése">
     <ArticleScraper />
-  </DashboardLayout>
+  </AdminLayout>
 </template>
 

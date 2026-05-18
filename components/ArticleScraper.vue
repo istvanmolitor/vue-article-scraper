@@ -9,16 +9,11 @@ import Card from '@admin/components/ui/Card.vue'
 import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
+import {createApiClient} from "@/packages/vue-user";
+
+const api = createApiClient()
 
 const { showDevError } = useDevError()
-
-const api = axios.create({
-  baseURL: getBackandUrl(),
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
-})
 
 // Add token to requests
 api.interceptors.request.use(
@@ -84,8 +79,10 @@ const scrapeArticle = async () => {
       url: url.value
     })
 
+    console.log(response)
+
     if (response.data.success) {
-      article.value = response.data.data
+      article.value = response.data.article
     } else {
       error.value = response.data.message || 'Hiba történt a cikk letöltése során'
     }
@@ -108,7 +105,7 @@ const saveAsPage = async () => {
   saveSuccess.value = null
 
   try {
-    const response = await axios.post(`${getBackandUrl()}/api/article-scraper/scrape-and-save`, {
+    const response = await api.post('/api/article-scraper/scrape-and-save', {
       url: url.value,
       publish: false
     })
