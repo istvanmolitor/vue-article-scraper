@@ -94,7 +94,7 @@ const scrapeArticle = async () => {
   }
 }
 
-const saveAsPage = async () => {
+const saveAsPost = async () => {
   if (!url.value.trim()) {
     error.value = 'Nincs URL megadva'
     return
@@ -111,9 +111,7 @@ const saveAsPage = async () => {
     })
 
     if (response.data.success) {
-      saveSuccess.value = `Cikk sikeresen elmentve: ${response.data.data.title}`
-      // Optionally redirect to the page editor
-      // window.location.href = `/admin/pages/${response.data.data.page_id}/edit`
+      saveSuccess.value = `Cikk sikeresen elmentve postkent: ${response.data.data.title}`
     } else {
       error.value = response.data.message || 'Hiba történt a cikk mentése során'
     }
@@ -158,11 +156,11 @@ const reset = () => {
             </Button>
             <Button
               v-if="article"
-              @click="saveAsPage"
+              @click="saveAsPost"
               :disabled="saving || loading"
               variant="secondary"
             >
-              {{ saving ? 'Mentés...' : 'Mentés Page-ként' }}
+              {{ saving ? 'Mentés...' : 'Cikk mentése' }}
             </Button>
             <Button
               v-if="article"
