@@ -9,6 +9,7 @@ import Card from '@admin/components/ui/Card.vue'
 import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
+import Icon from '@admin/components/ui/Icon.vue'
 import {createApiClient} from "@/packages/vue-user";
 
 const api = createApiClient()
@@ -221,9 +222,7 @@ const reset = () => {
 
               <!-- Authors -->
               <div v-if="article.authors && article.authors.length > 0" class="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+                <Icon name="user" class="w-4 h-4" />
                 <span>{{ article.authors.join(', ') }}</span>
               </div>
 
@@ -320,16 +319,14 @@ const reset = () => {
             <CardContent class="bg-gray-50 border-t pt-6">
               <div class="flex items-center justify-between text-sm text-gray-600">
                 <a
-                  :href="article.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
-                >
-                  <span>Eredeti cikk megtekintése</span>
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
+                   :href="article.url"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+                 >
+                   <span>Eredeti cikk megtekintése</span>
+                   <Icon name="arrow-up-right" class="w-4 h-4" />
+                 </a>
               </div>
             </CardContent>
           </Card>
