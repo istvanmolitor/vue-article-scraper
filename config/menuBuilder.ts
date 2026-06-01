@@ -9,7 +9,8 @@ export class ArticleScraperMenuBuilder extends MenuBuilder {
         title: 'Cikk letöltése',
         path: '/admin/article-scraper',
         icon: Download,
-        order: 100
+        order: 100,
+        permission: 'article-scraper'
       })
     }
 
