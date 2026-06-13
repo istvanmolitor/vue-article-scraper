@@ -57,11 +57,18 @@ interface ScrapedArticle {
   createdAt: string | null
 }
 
+interface SavedPost {
+  post_id: number
+  title: string
+  slug: string
+  is_published: boolean
+}
+
 const url = ref('')
 const loading = ref(false)
 const saving = ref(false)
 const error = ref<string | null>(null)
-const saveSuccess = ref<string | null>(null)
+const savedPost = ref<SavedPost | null>(null)
 const article = ref<ScrapedArticle | null>(null)
 
 const scrapeArticle = async () => {
@@ -72,7 +79,7 @@ const scrapeArticle = async () => {
 
   loading.value = true
   error.value = null
-  saveSuccess.value = null
+  savedPost.value = null
   article.value = null
 
   try {
@@ -103,7 +110,7 @@ const saveAsPost = async () => {
 
   saving.value = true
   error.value = null
-  saveSuccess.value = null
+  savedPost.value = null
 
   try {
     const response = await api.post('/api/article-scraper/scrape-and-save', {
@@ -112,7 +119,7 @@ const saveAsPost = async () => {
     })
 
     if (response.data.success) {
-      saveSuccess.value = `Cikk sikeresen elmentve postkent: ${response.data.data.title}`
+      savedPost.value = response.data.data
     } else {
       error.value = response.data.message || 'Hiba történt a cikk mentése során'
     }
@@ -128,7 +135,7 @@ const reset = () => {
   url.value = ''
   article.value = null
   error.value = null
-  saveSuccess.value = null
+  savedPost.value = null
 }
 </script>
 
@@ -176,11 +183,29 @@ const reset = () => {
 
         <!-- Success Message -->
         <Card
-          v-if="saveSuccess"
+          v-if="savedPost"
           class="border-green-200 bg-green-50"
         >
           <CardContent class="pt-6">
-            <p class="text-green-700">{{ saveSuccess }}</p>
+            <p class="text-green-700 mb-3">Cikk sikeresen elmentve postkent: <strong>{{ savedPost.title }}</strong></p>
+            <div class="flex gap-2">
+              <a
+                :href="`/admin/cms/post/${savedPost.post_id}/edit`"
+                class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"
+              >
+                <Icon name="edit" class="w-4 h-4" />
+                Szerkesztés
+              </a>
+              <a
+                :href="`/post/${savedPost.slug}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-600 text-white text-sm font-medium rounded hover:bg-gray-700 transition-colors"
+              >
+                <Icon name="eye\" class=\"w-4 h-4\" />
+                Megtekintés
+              </a>
+            </div>
           </CardContent>
         </Card>
 
