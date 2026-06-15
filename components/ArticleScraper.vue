@@ -202,7 +202,7 @@ const reset = () => {
                 rel="noopener noreferrer"
                 class="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-600 text-white text-sm font-medium rounded hover:bg-gray-700 transition-colors"
               >
-                <Icon name="eye\" class=\"w-4 h-4\" />
+                <Icon name="eye" class="w-4 h-4" />
                 Megtekintés
               </a>
             </div>
