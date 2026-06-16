@@ -277,9 +277,7 @@ const reset = () => {
 
             <!-- Lead -->
             <CardContent v-if="article.lead" class="bg-gray-50 border-b pt-6">
-              <p class="text-lg font-medium text-gray-800 leading-relaxed">
-                {{ article.lead }}
-              </p>
+              <p class="text-lg font-medium text-gray-800 leading-relaxed" v-html="article.lead"></p>
             </CardContent>
 
             <!-- Article Content -->
@@ -287,14 +285,10 @@ const reset = () => {
               <div class="prose prose-lg max-w-none">
                 <template v-for="(element, index) in article.content" :key="index">
                   <!-- Paragraph -->
-                  <p v-if="element.type === 'paragraph'" class="mb-4 text-gray-800 leading-relaxed">
-                    {{ element.content }}
-                  </p>
+                  <p v-if="element.type === 'paragraph'" class="mb-4 text-gray-800 leading-relaxed" v-html="element.content"></p>
 
                   <!-- Heading -->
-                  <h2 v-else-if="element.type === 'heading'" class="text-2xl font-bold text-gray-900 mt-6 mb-4">
-                    {{ element.content }}
-                  </h2>
+                  <h2 v-else-if="element.type === 'heading'" class="text-2xl font-bold text-gray-900 mt-6 mb-4" v-html="element.content"></h2>
 
                   <!-- Image -->
                   <figure v-else-if="element.type === 'image'" class="my-6">
@@ -310,9 +304,7 @@ const reset = () => {
                   </figure>
 
                   <!-- Quote -->
-                  <blockquote v-else-if="element.type === 'quote'" class="border-l-4 border-blue-500 pl-4 my-6 italic text-gray-700">
-                    {{ element.content }}
-                  </blockquote>
+                  <blockquote v-else-if="element.type === 'quote'" class="border-l-4 border-blue-500 pl-4 my-6 italic text-gray-700" v-html="element.content"></blockquote>
 
                   <!-- List -->
                   <ul v-else-if="element.type === 'list'" class="list-disc list-inside mb-4 space-y-2">
