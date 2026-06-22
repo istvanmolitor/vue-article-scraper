@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useDevError } from '@admin/lib/utils'
 import Button from '@admin/components/ui/button/Button.vue'
 import Input from '@admin/components/ui/Input.vue'
@@ -9,11 +9,10 @@ import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
 import Checkbox from '@admin/components/ui/Checkbox.vue'
-import Select from '@admin/components/ui/Select.vue'
 import { LayoutSelect } from '@theme'
 import Icon from '@admin/components/ui/Icon.vue'
 import {createApiClient} from "@/packages/vue-user";
-import { postTypeService, type PostType } from '@cms'
+import { PostTypeSelect } from '@cms'
 
 const api = createApiClient()
 
@@ -76,12 +75,6 @@ const article = ref<ScrapedArticle | null>(null)
 const formPublish = ref(false)
 const formLayout = ref('')
 const formPostTypeId = ref<number | null>(null)
-const postTypes = ref<PostType[]>([])
-
-onMounted(async () => {
-  const response = await postTypeService.getAll()
-  postTypes.value = response.data.data
-})
 
 const scrapeArticle = async () => {
   if (!url.value.trim()) {
@@ -349,18 +342,7 @@ const reset = () => {
             <CardTitle class="text-base">Cikk mentése</CardTitle>
           </CardHeader>
           <CardContent class="space-y-4">
-            <!-- Post type selector -->
-            <div class="space-y-1">
-              <Label for="post-type">Post típus <span class="text-red-500">*</span></Label>
-              <Select
-                id="post-type"
-                v-model="formPostTypeId"
-                :options="postTypes"
-                labelField="name"
-                valueField="id"
-                placeholder="Válassz típust..."
-              />
-            </div>
+            <PostTypeSelect v-model="formPostTypeId" />
 
             <!-- Publish toggle -->
             <div class="flex items-center gap-3">
