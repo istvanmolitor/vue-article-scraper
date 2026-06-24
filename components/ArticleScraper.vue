@@ -347,7 +347,7 @@ const reset = () => {
             <!-- Publish toggle -->
             <div class="flex items-center gap-3">
               <Checkbox id="publish" v-model="formPublish" />
-              <Label for="publish" class="cursor-pointer">Publikus</Label>
+              <Label for="publish" variant="checkbox">Publikus</Label>
             </div>
 
             <LayoutSelect v-model="formLayout" />
