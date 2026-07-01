@@ -10,7 +10,7 @@ export class ArticleScraperMenuBuilder extends MenuBuilder {
         path: '/admin/article-scraper',
         icon: Download,
         order: 100,
-        permission: 'article-scraper'
+        permission: 'article_scraper'
       })
     }
 
