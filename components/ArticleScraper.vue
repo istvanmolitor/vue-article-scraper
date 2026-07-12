@@ -8,7 +8,7 @@ import Card from '@admin/components/ui/Card.vue'
 import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
-import Checkbox from '@admin/components/ui/Checkbox.vue'
+import CheckboxField from '@admin/components/ui/CheckboxField.vue'
 import { LayoutSelect } from '@theme'
 import Icon from '@admin/components/ui/Icon.vue'
 import {createApiClient} from "@/packages/vue-user";
@@ -345,10 +345,7 @@ const reset = () => {
             <PostTypeSelect v-model="formPostTypeId" />
 
             <!-- Publish toggle -->
-            <div class="flex items-center gap-3">
-              <Checkbox id="publish" v-model="formPublish" />
-              <Label for="publish" variant="checkbox">Publikus</Label>
-            </div>
+            <CheckboxField id="publish" label="Publikus" v-model="formPublish" />
 
             <LayoutSelect v-model="formLayout" />
 
